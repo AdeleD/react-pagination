@@ -8,13 +8,14 @@ const dir_dist = path.resolve(__dirname, 'dist');
 const dir_node_modules = path.resolve(__dirname, 'node_modules');
 
 const config = {
-  target: 'node',
   entry: path.resolve(dir_js, 'index.js'),
   output: {
     path: dir_build,
     library: 'ReactPaginate',
     libraryTarget: 'umd',
     filename: 'react-paginate.js',
+    chunkLoading: false,
+    wasmLoading: false,
   },
   devServer: {
     contentBase: dir_build,
@@ -52,7 +53,9 @@ const config = {
 
 module.exports = (env, argv) => {
   if (argv.mode === 'production') {
+    config.mode = 'production',
     config.output.path = dir_dist;
+    config.module.rules = config.module.rules.filter(rule => rule.use !== 'react-hot-loader/webpack');
   }
   return config;
 }
